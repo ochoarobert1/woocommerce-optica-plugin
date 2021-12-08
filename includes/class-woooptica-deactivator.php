@@ -30,7 +30,7 @@ class WooOptica_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		deactivate_plugins( plugin_basename( __FILE__ ) );
 	}
 
 }

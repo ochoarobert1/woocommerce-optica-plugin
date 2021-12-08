@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Fired during plugin activation
- *
- * @link       http://example.com
- * @since      1.0.0
- *
- * @package    WooOptica
- * @subpackage WooOptica/includes
- */
-
-/**
  * Fired during plugin activation.
  *
  * This class defines all code necessary to run during the plugin's activation.
@@ -20,17 +10,33 @@
  * @subpackage WooOptica/includes
  * @author     Robert Ochoa <contacto@robertochoaweb.com>
  */
-class WooOptica_Activator {
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
-        flush_rewrite_rules();
-	}
+ // If this file is called directly, abort.
+if (! defined('WPINC')) {
+    die;
+}
+class WooOptica_Activator
+{
 
+    /**
+     * Check active plugins funcion
+     *
+     * Check if woocommerce is active in order to activate this plugin.
+     *
+     * @since    1.0.0
+     */
+    public static function activate()
+    {
+        // Test to see if WooCommerce is active (including network activated).
+        if (class_exists('WooCommerce')) {
+            // Refresh Permalinks Rules
+            flush_rewrite_rules();
+        } else {
+            // Deactivate current plugin
+            require_once 'class-woooptica-deactivator.php';
+            WooOptica_Deactivator::deactivate();
+            // Send a global warning message
+            wp_die(__('Woocommerce debe estar activo para usar este plugin.', 'woo-optica'));
+        }
+    }
 }
